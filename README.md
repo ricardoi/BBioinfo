@@ -45,3 +45,67 @@ spades.py --rnaviral -1 file1_R1.fq.gz -2 file1_R2.fq.gz -t 6  -o results_out
 ```
 The flag `rnaviral` will enables virus assembly module from RNA-Seq data. The `-1` and `-2` indicates the input data for paired ends reads, the `-t` indicates the number of processors, and `-o` indicates the output directory to save the results. In this folder, you will be have the results for the assembly.
 
+--
+Copy the scaffold.fasta files into a new `spades_results` folder. Subset the `fasta` file using `subsetfastas.bash` targeting the expected genome size range infecting your host, e.g. 0.6 to 16 kb for mycoviruses.
+You need to clone this repository as follows
+```bash
+git clone https://github.com/ricardoi/BBioinfo/
+cd BBioinfo/scripts/
+chmod +x subsetfastas.bash
+```
+Now you can execute `subsefastas.bash` with `./PATHtoBBioinfo/scripts/subsetfasta.bash 600 16000 scaffolds.fasta` and it will create an outpute `scaffolds_subset.fasta`
+
+## Constructing a mycovirus database using `esearch` from NCBI
+Create a database with all queries assigned to a family within the mycovirus group.
+```bash
+esearch -db nuccore -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[ORGANISM] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] AND (complete genome[Title]))' \
+| efetch -format fasta > mycoviruses_by_family.fasta
+```
+Create a database with all complete genomes assigned to a family within the mycovirus group
+```bash
+esearch -db nuccore -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[ORGANISM] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] AND (complete genome[Title]))' \
+| efetch -format fasta > mycoviruses_by_family_completegenome.fasta
+```
+Create a database with all protein queries assigned to a family within the mycovirus group.
+```bash
+esearch -db protein -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[ORGANISM] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism])' \
+| efetch -format fasta > mycoviruses_by_family_protein.fasta
+```
+Create a database with the protein queries from the complete genomes assigned to a family within the mycovirus group.
+```bash
+esearch -db nuccore -query \
+'((Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism])) 
+ AND "complete genome"[Title]' \
+| elink -target protein \
+| efetch -format fasta > mycovirus_proteins_from_complete_genomes.faa
+```
+
+
+Create the databases for complete genome, proteins from complete genomes, all nucleotide sequences and proteins
+```bash
+makeblastdb -in mycoviruses_by_family.fasta -dbtype nucl -out virusDBnc -parse_seqids -hash_index -title "Mycoviruses (nucl)"
+
+makeblastdb -in mycoviruses_by_family_protein.fasta -dbtype prot -out virusDBaa -parse_seqids -hash_index -title "Mycoviruses (aa)"
+
+makeblastdb -in mycoviruses_by_family-completegenome.fasta -dbtype nucl -out virusDBgeno -parse_seqids -hash_index -title "Mycoviruses (geno)"
+
+makeblastdb -in mycovirus_proteins_from_complete_genomes.faa -dbtype prot -out virusDBprot -parse_seqids -hash_index -title "Mycoviruses (prot)"
+```
+
+BLAST
+```bash
+ blastn -query file_scaffolds.fasta -db virusDBnc -task dc-megablast -evalue 1e-5 -max_target_seqs 5 -num_threads 6 -outfmt '6 qseqid sseqid pident length qcovs evalue bitscore staxids sscinames scomnames sskingdoms stitle' -out file_blastn_res.tsv"
+```
+
+
+
+
+
+
+
+
+
+
