@@ -53,7 +53,14 @@ git clone https://github.com/ricardoi/BBioinfo/
 cd BBioinfo/scripts/
 chmod +x subsetfastas.bash
 ```
-Now you can execute `subsefastas.bash` with `./PATHtoBBioinfo/scripts/subsetfasta.bash 600 16000 scaffolds.fasta` and it will create an outpute `scaffolds_subset.fasta`
+Now you can execute `subsefastas.bash` with `./PATHtoBBioinfo/scripts/subsetfasta.bash 600 16000 scaffolds.fasta` and it will create an output `scaffolds_subset.fasta`.
+Type the following:
+```bash
+./subsetfastas.bash
+Usage: subsetfastas.bash MIN MAX file1.fasta [file2.fasta ...]
+Example: subsetfastas.bash 800 20000 sample1.fasta sample2.fasta
+.fasta, .fa, .fas, .faa, .fna, are accepted extensions
+```
 
 ## Constructing a mycovirus database using `esearch` from NCBI
 Create a database with all queries assigned to a family within the mycovirus group.
