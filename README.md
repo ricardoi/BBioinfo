@@ -79,7 +79,7 @@ Create a database with all protein queries assigned to a family within the mycov
 ```bash
 esearch -db protein -query \
 '(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[ORGANISM] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism])' \
-| efetch -format fasta > mycoviruses_by_family_protein.fasta
+| efetch -format fasta > mycoviruses_by_family_protein.faa
 ```
 Create a database with the protein queries from the complete genomes assigned to a family within the mycovirus group.
 ```bash
