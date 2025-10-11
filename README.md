@@ -95,7 +95,7 @@ Create the databases for complete genome, proteins from complete genomes, all nu
 ```bash
 makeblastdb -in mycoviruses_by_family.fasta -dbtype nucl -out virusDBnc -parse_seqids -hash_index -title "Mycoviruses (nucl)"
 
-makeblastdb -in mycoviruses_by_family_protein.fasta -dbtype prot -out virusDBaa -parse_seqids -hash_index -title "Mycoviruses (aa)"
+makeblastdb -in mycoviruses_by_family_protein.faa -dbtype prot -out virusDBaa -parse_seqids -hash_index -title "Mycoviruses (aa)"
 
 makeblastdb -in mycoviruses_by_family-completegenome.fasta -dbtype nucl -out virusDBgeno -parse_seqids -hash_index -title "Mycoviruses (geno)"
 
