@@ -64,9 +64,41 @@ Example: subsetfastas.bash 800 20000 sample1.fasta sample2.fasta
 
 ## Constructing a mycovirus database using `esearch` from NCBI
 Create a database with all queries assigned to a family within the mycovirus group.
+> install [efetch](https://www.ncbi.nlm.nih.gov/books/NBK179288/) from NCBI `sh -c "$(curl -fsSL https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/install-edirect.sh)"` add it to the `$PATH` with `echo "export PATH=\$HOME/edirect:\$PATH" >> $HOME/.bash_profile`
+and `brew install csvkit`
+
+
+NEW LIST OF ALL Mycoviruses
+All nucleotide sequences in nuccore that match the families
 ```bash
 esearch -db nuccore -query \
-'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[ORGANISM] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] AND (complete genome[Title]))' \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] OR Amalgaviridae[Organism] OR Botybirnavirus[Organism] OR Reoviridae[Organism] OR Alphaflexiviridae[Organism] OR Barnaviridae[Organism] OR Curvulaviridae[Organism] OR Deltaflexiviridae[Organism] OR Fusagraviridae[Organism] OR Gammaflexiviridae[Organism] OR Hadakaviridae[Organism] OR Metaviridae[Organism] OR Mycoalphaviridae[Organism] OR Pseudoviridae[Organism] OR Phenuiviridae[Organism] OR Rhabdoviridae[Organism] OR Sclerobunyaviridae[Organism] OR Genomoviridae[Organism] OR Mycoaspiviridae[Organism] OR Oomyviridae[Organism] OR Splipalmiviridae[Organism] OR Spinareoviridae[Organism] OR Tymoviridae[Organism] OR Unassigned[Organism]))' \
+| efetch -format fasta > mycovirus_nuccore_all.fna
+```
+Only genomic molecules in nuccore
+```bash
+esearch -db nuccore -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] OR Amalgaviridae[Organism] OR Botybirnavirus[Organism] OR Reoviridae[Organism] OR Alphaflexiviridae[Organism] OR Barnaviridae[Organism] OR Curvulaviridae[Organism] OR Deltaflexiviridae[Organism] OR Fusagraviridae[Organism] OR Gammaflexiviridae[Organism] OR Hadakaviridae[Organism] OR Metaviridae[Organism] OR Mycoalphaviridae[Organism] OR Pseudoviridae[Organism] OR Phenuiviridae[Organism] OR Rhabdoviridae[Organism] OR Sclerobunyaviridae[Organism] OR Genomoviridae[Organism] OR Mycoaspiviridae[Organism] OR Oomyviridae[Organism] OR Splipalmiviridae[Organism] OR Spinareoviridae[Organism] OR Tymoviridae[Organism] OR Unassigned[Organism]) AND (complete genome[Title])' \
+| efetch -format fasta > mycovirus_nuccore_genomes.fna
+```
+ALL proteins in the protein DB that match the families
+```
+esearch -db protein -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] OR Amalgaviridae[Organism] OR Botybirnavirus[Organism] OR Reoviridae[Organism] OR Alphaflexiviridae[Organism] OR Barnaviridae[Organism] OR Curvulaviridae[Organism] OR Deltaflexiviridae[Organism] OR Fusagraviridae[Organism] OR Gammaflexiviridae[Organism] OR Hadakaviridae[Organism] OR Metaviridae[Organism] OR Mycoalphaviridae[Organism] OR Pseudoviridae[Organism] OR Phenuiviridae[Organism] OR Rhabdoviridae[Organism] OR Sclerobunyaviridae[Organism] OR Genomoviridae[Organism] OR Mycoaspiviridae[Organism] OR Oomyviridae[Organism] OR Splipalmiviridae[Organism] OR Spinareoviridae[Organism] OR Tymoviridae[Organism] OR Unassigned[Organism]))' \
+efetch -format fasta > mycovirus_proteins_all.faa
+```
+ONLY proteins from the nuccore genomic records
+```bash
+esearch -db nuccore -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] OR Amalgaviridae[Organism] OR Botybirnavirus[Organism] OR Reoviridae[Organism] OR Alphaflexiviridae[Organism] OR Barnaviridae[Organism] OR Curvulaviridae[Organism] OR Deltaflexiviridae[Organism] OR Fusagraviridae[Organism] OR Gammaflexiviridae[Organism] OR Hadakaviridae[Organism] OR Metaviridae[Organism] OR Mycoalphaviridae[Organism] OR Pseudoviridae[Organism] OR Phenuiviridae[Organism] OR Rhabdoviridae[Organism] OR Sclerobunyaviridae[Organism] OR Genomoviridae[Organism] OR Mycoaspiviridae[Organism] OR Oomyviridae[Organism] OR Splipalmiviridae[Organism] OR Spinareoviridae[Organism] OR Tymoviridae[Organism] OR Unassigned[Organism]))' \
+elink -target protein \
+efetch -db protein -format fasta > mycovirus_proteins_from_nuccore_genomes.faa
+```
+
+DEPRECATED
+```bash
+esearch -db nuccore -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[ORGANISM] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism])' \
 | efetch -format fasta > mycoviruses_by_family.fasta
 ```
 Create a database with all complete genomes assigned to a family within the mycovirus group
