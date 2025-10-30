@@ -89,10 +89,31 @@ esearch -db protein -query \
 ```
 ONLY proteins from the nuccore genomic records
 ```bash
+NEW
+esearch -db nuccore -query \
+'(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] OR Amalgaviridae[Organism] OR Botybirnavirus[Organism] OR Reoviridae[Organism] OR Alphaflexiviridae[Organism] OR Barnaviridae[Organism] OR Curvulaviridae[Organism] OR Deltaflexiviridae[Organism] OR Fusagraviridae[Organism] OR Gammaflexiviridae[Organism] OR Hadakaviridae[Organism] OR Metaviridae[Organism] OR Mycoalphaviridae[Organism] OR Pseudoviridae[Organism] OR Phenuiviridae[Organism] OR Rhabdoviridae[Organism] OR Sclerobunyaviridae[Organism] OR Genomoviridae[Organism] OR Mycoaspiviridae[Organism] OR Oomyviridae[Organism] OR Splipalmiviridae[Organism] OR Spinareoviridae[Organism] OR Tymoviridae[Organism] OR Unassigned[Organism] AND (complete genome[Title]))' \
+| elink -target protein \
+| efetch -format fasta > mycovirus_proteins_from_nuccore_genomes.faa
+
+CONFLICT
 esearch -db nuccore -query \
 '(Mitoviridae[Organism] OR Narnaviridae[Organism] OR Partitiviridae[Organism] OR Chrysoviridae[Organism] OR Totiviridae[Organism] OR Polymycoviridae[Organism] OR Fusariviridae[Organism] OR Hypoviridae[Organism] OR Endornaviridae[Organism] OR Quadriviridae[Organism] OR Yadokariviridae[Organism] OR Botourmiaviridae[Organism] OR Mymonaviridae[Organism] OR Megabirnaviridae[Organism] OR Alternaviridae[Organism] OR Amalgaviridae[Organism] OR Botybirnavirus[Organism] OR Reoviridae[Organism] OR Alphaflexiviridae[Organism] OR Barnaviridae[Organism] OR Curvulaviridae[Organism] OR Deltaflexiviridae[Organism] OR Fusagraviridae[Organism] OR Gammaflexiviridae[Organism] OR Hadakaviridae[Organism] OR Metaviridae[Organism] OR Mycoalphaviridae[Organism] OR Pseudoviridae[Organism] OR Phenuiviridae[Organism] OR Rhabdoviridae[Organism] OR Sclerobunyaviridae[Organism] OR Genomoviridae[Organism] OR Mycoaspiviridae[Organism] OR Oomyviridae[Organism] OR Splipalmiviridae[Organism] OR Spinareoviridae[Organism] OR Tymoviridae[Organism] OR Unassigned[Organism] AND (complete genome[Title]))' \
 elink -target protein \
 | efetch -db protein -format fasta > mycovirus_proteins_from_nuccore_genomes.faa
+```
+
+
+Cleaning databases - some families are very large and not specific to mycoviruses. Task is to removing keywords from fasta headers.
+```bash
+awk '
+  BEGIN {
+    IGNORECASE=1
+  }
+  /^>/ {
+      bad = ($0 ~ /rotavirus|rabies|itis|avian|culex|bluetongue|mammalian|epizootic|fever|modifying|human|rodent|piscine|porcine|Rotavirus|haemorrhagic/)
+  }
+  !bad
+     ' mycovirus_nuccore_all.fna > mycoviruses_nuccore_all.fna
 ```
 
 DEPRECATED
