@@ -62,6 +62,28 @@ Example: subsetfastas.bash 800 20000 sample1.fasta sample2.fasta
 .fasta, .fa, .fas, .faa, .fna, are accepted extensions
 ```
 
+## Remove host 
+```
+#!/bin/bash
+
+# Remove Host Sequence from Viromes
+# Map Illumina reads againt host genome sequence
+
+# Index your Host file 
+bowtie2-build genome.fna host_index # takes about several minutes
+
+# Mapping reads to the Host genome 
+bowtie2 -x host_index -1 Reads_1.fastq -2 Reads_2.fastq -S host_mapped_and_unmapped.sam
+samtools view -bS host_mapped-unmapped.sam > host_mapped-unmapped.bam
+
+# Filter unmapped reads
+samtools view -b -f 12 -F 256 host_mapped-unmapped.sam > host_bothpairs_unmapped.bam
+
+# Split pair-end reads into separated fastq files...
+samtools sort -n host_both-pairs_unmapped.bam -o host_both-pairs_unmapped_sorted.bam 
+bedtools bamtofastq -i host_both-pairs_unmapped_sorted.bam -fq host_filtered.r1.fastq -fq2 host_filtered.r2.fastq
+```
+
 ## Constructing a mycovirus database using `esearch` from NCBI
 Create a database with all queries assigned to a family within the mycovirus group.
 > install [efetch](https://www.ncbi.nlm.nih.gov/books/NBK179288/) from NCBI `sh -c "$(curl -fsSL https://ftp.ncbi.nlm.nih.gov/entrez/entrezdirect/install-edirect.sh)"` add it to the `$PATH` with `echo "export PATH=\$HOME/edirect:\$PATH" >> $HOME/.bash_profile`
