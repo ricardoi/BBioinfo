@@ -63,6 +63,7 @@ Example: subsetfastas.bash 800 20000 sample1.fasta sample2.fasta
 ```
 
 ## Remove host 
+To install bowtie2 with `brew install bowtie2`
 ```
 #!/bin/bash
 
