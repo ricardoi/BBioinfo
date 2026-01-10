@@ -177,10 +177,18 @@ makeblastdb -in mycoviruses_by_family-completegenome.fasta -dbtype nucl -out vir
 
 makeblastdb -in mycovirus_proteins_from_complete_genomes.faa -dbtype prot -out virusDBprot -parse_seqids -hash_index -title "Mycoviruses (prot)"
 ```
+```
+virusDBgeno = genome
+virusDBnc = nuccore
+virusDBaa = all proteins
+virusDBprot = genome proteins
+```
 
 BLAST
 ```bash
- blastn -query file_scaffolds.fasta -db virusDBnc -task dc-megablast -evalue 1e-5 -max_target_seqs 5 -num_threads 6 -outfmt '6 qseqid sseqid pident length qcovs evalue bitscore staxids sscinames scomnames sskingdoms stitle' -out file_blastn_res.tsv"
+blastn -query file_scaffolds_subset.fasta -db ../../../databases/virusDBnc -task dc-megablast -evalue 1e-5 -max_target_seqs 5 -num_threads 10 -outfmt '6 qseqid sseqid pident length qcovs evalue bitscore staxids sscinames scomnames sskingdoms stitle' -out blastn_res.tsv
+
+blastx -query file_scaffolds_subset.fasta -db ../../../databases/virusDBaa -task blastx -evalue 1e-5 -max_target_seqs 5 -num_threads 10 -outfmt '6 qseqid sseqid pident length qcovs evalue bitscore staxids sscinames scomnames sskingdoms stitle' -out blastx_res.tsv
 ```
 
 
